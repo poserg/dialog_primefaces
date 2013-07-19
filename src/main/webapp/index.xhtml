@@ -1,19 +1,29 @@
-<html xmlns="http://www.w3.org/1999/xhtml" 
-    xmlns:h="http://java.sun.com/jsf/html" 
-    xmlns:f="http://java.sun.com/jsf/core" 
-    xmlns:p="http://primefaces.org/ui"> 
- 
-    <h:head> 
- 
-    </h:head> 
-      
-    <h:body> 
-       <h:form> 
-           <p:panel header="Keyboard Demo">   
-               <p:keyboard value="#{keyboardBean.value}"/> 
-             </p:panel>
-             <p:commandButton value="Submit"/>
-             <p:editor value="#{editor.value}" />
-       </h:form>
-    </h:body> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<h:form>
+		<p:panel header="Keyboard Demo">
+			<p:keyboard value="#{keyboardBean.value}" />
+		</p:panel>
+		<p:commandButton value="Submit" />
+		<p:editor value="#{editor.value}" />
+	</h:form>
+	<!-- 	<p:commandButton value="Show Dialog" -->
+	<!-- 		action="CheckPaymentStatusDialogVar.show();" type="button" /> -->
+	<p:commandButton value="Show My Dialog" action="md.show();"
+		type="button" />
+	<ui:include src="CheckPaymentStatusDialog.xhtml" />
+	<p:dialog header="Проверить наличие платежа" id="myDialog" appendToBody="true"
+		widgetVar="md" modal="true" resizable="false" width="440" height="200">
+		<h:outputText value=">Message!!!"/>
+	</p:dialog>
+</h:body>
 </html>
