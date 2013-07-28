@@ -30,6 +30,16 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>ru.it.appquiry</groupId>
+			<artifactId>ws-client</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.it.appquiry</groupId>
+			<artifactId>unique-payer-identifier</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

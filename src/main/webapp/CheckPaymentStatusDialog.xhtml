@@ -1,105 +1,124 @@
-<ui:dialog xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://primefaces.prime.com.tr/ui"
-	header="Проверить наличие платежа" id="CheckPaymentStatusDialog"
-	widgetVar="CheckPaymentStatusDialogVar" modal="true" resizable="false" appendToBody="true"
-	width="440" styleClass="test">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:form id="CheckPaymentStatus"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ppctu="http://primefaces.org/ui"
+        style="margin:0px; padding:0px;">
+    <ppctu:dialog header="Проверить наличие платежа" id="CheckPaymentStatusDialog"
+                  widgetVar="CheckPaymentStatusDialogVar" modal="true"
+                  resizable="true" width="440"
+                  styleClass="checkPaymentDialog">
 
-	<h:panelGroup>
-		<h:outputText value="Данные физического лица" />
-		<h:panelGroup>
-			<h:outputText value="Указать альтернативные данные" />
-			<h:selectBooleanCheckbox id="alternativeDataCheckBox"
-				onchange="
-                        document.getElementById('SearchForm:CheckPaymentStatus:mainLayout').style.display=this.checked?'NONE':'BLOCK';
-                        document.getElementById('SearchForm:CheckPaymentStatus:alternateLayout').style.display=this.checked?'BLOCK':'NONE';" />
-			<!-- Почем нельзя указать относительный id -->
-		</h:panelGroup>
-		<h:panelGroup id="mainLayout">
-			<h:panelGrid columns="2" style="width: 100%" border="0">
-				<h:panelGroup>
-					<h:outputText value="СНИЛС" />
-					<h:outputText value="* " styleClass="required" />
-				</h:panelGroup>
-				<h:inputText id="snils" />
-			</h:panelGrid>
-		</h:panelGroup>
-		<h:panelGroup id="alternateLayout">
-			<h:panelGrid columns="2" style="width: 100%" border="0">
-				<h:panelGroup>
-					<h:outputText value="Тип документа" />
-					<h:outputText value="* " styleClass="required" />
-				</h:panelGroup>
-				<h:selectOneListbox id="docType" />
-				<h:panelGroup>
-					<h:outputText value="Номер документа" />
-					<h:outputText value="* " styleClass="required" />
-				</h:panelGroup>
-				<h:inputText id="docNumber" />
-				<h:panelGroup>
-					<h:outputText value="Гражданство" />
-					<h:outputText value="* " styleClass="required" />
-				</h:panelGroup>
-				<h:inputText id="citizenship" />
-			</h:panelGrid>
-		</h:panelGroup>
-	</h:panelGroup>
-	<h:panelGroup>
-		<h:outputText value="Данные юридического лица" />
-		<h:panelGrid columns="2" style="width: 100%" border="0">
-			<h:panelGroup>
-				<h:outputText value="ИНН" />
-				<h:outputText value="* " styleClass="required" />
-			</h:panelGroup>
-			<h:inputText id="inn" />
-			<h:panelGroup>
-				<h:outputText value="КПП" />
-				<h:outputText value="* " styleClass="required" />
-			</h:panelGroup>
-			<h:inputText id="kpp" />
-		</h:panelGrid>
-	</h:panelGroup>
-	<h:panelGroup>
-		<h:outputText value="Период времени, за который требуются сведения" />
-		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-			<h:outputText value="Начало периода" />
-			<ui:calendar id="beginDate" />
-			<!--                                    <ui:calendar id="applicationDateFrom" 
-                                    showOn="button"
-                                    pattern="dd.MM.yyyy" locale="ru"
-                                    converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
-                                    value="#{SearchFormBean.selectQuery.applicationDateFrom}"
-                                    size="9"
-                                    effect=""
-                                    maxdate="#{SearchFormBean.applicationMaxDate}"
-                                    onchange="OnApplicationDateFromChange();"/>-->
-
-			<h:outputText value="Конец периода" />
-			<ui:calendar id="endDate" />
-		</h:panelGrid>
-	</h:panelGroup>
-	<h:panelGroup>
-		<h:commandButton value="Проверить" onclick="hide(); return false;" />
-		<h:commandButton value="Отменить" onclick="hide(); return false;" />
-	</h:panelGroup>
-	<h:panelGroup>
-		<table>
-			<thead>
-				<tr>
-					<th></th>
-					<th>Дата платежа</th>
-					<th>Уникальный идентификатор платежа</th>
-					<th>Назначение платежа</th>
-					<th>Сумма оплаты по платежу</th>
-					<th>Идентификатор плательщика</th>
-					<th>Расчетный счет получателя средств</th>
-					<th>Идентификатор получателя средств</th>
-				</tr>
-			</thead>
-			<tr>
-
-			</tr>
-		</table>
-		<h:commandButton value="Сформировать платежные документы" />
-		<h:commandButton value="Отмена" />
-	</h:panelGroup>
-</ui:dialog>
+        <h:panelGroup rendered="#{AppointmentBean.person.applicantType eq 1}">
+            <h:outputText value="Данные физического лица"/>
+            <h:panelGroup>
+                <h:outputText value="Указать альтернативные данные"/>
+                <h:selectBooleanCheckbox id="alternativeDataCheckBox" onchange="
+                        document.getElementById('ServiceForm:CheckPaymentStatus:mainLayout').style.display=this.checked?'NONE':'BLOCK';
+                        document.getElementById('ServiceForm:CheckPaymentStatus:alternateLayout').style.display=this.checked?'BLOCK':'NONE';"
+                        value="#{CheckPaymentStatusBean.check}"/>
+                <!-- Почем нельзя указать относительный id -->
+            </h:panelGroup>
+            <h:panelGroup id="mainLayout">
+                <h:panelGrid columns="2" style="width: 100%" border="0">
+                    <h:panelGroup>
+                        <h:outputText value="СНИЛС"/>
+                        <h:outputText value="* " styleClass="required"/>
+                    </h:panelGroup>
+                    <h:inputText id="snils" value="#{AppointmentBean.person.snils}"/>
+                </h:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="alternateLayout" style="display: none;">
+                <h:panelGrid columns="2" style="width: 100%" border="0">
+                    <h:panelGroup>
+                        <h:outputText value="Тип документа"/>
+                        <h:outputText value="* " styleClass="required"/>
+                    </h:panelGroup>
+                    <ppctu:selectOneMenu id="docType" value="#{CheckPaymentStatusBean.selectedDocType}">
+                        <f:selectItems value="#{AppointmentBean.documents4applicant}"/>
+                    </ppctu:selectOneMenu>
+                    <h:panelGroup>
+                        <h:outputText value="Номер документа"/>
+                        <h:outputText value="* " styleClass="required"/>
+                    </h:panelGroup>
+                    <h:inputText id="docNumber" value="#{CheckPaymentStatusBean.documentNumber}"/>
+                    <h:panelGroup>
+                        <h:outputText value="Гражданство"/>
+                        <h:outputText value="* " styleClass="required"/>
+                    </h:panelGroup>
+                    <ppctu:selectOneMenu id="citizenship" value="#{CheckPaymentStatusBean.selectedCitizenship}">
+                        <f:selectItems value="#{CheckPaymentStatusBean.citizensipList}"/>
+                    </ppctu:selectOneMenu>
+                </h:panelGrid>
+            </h:panelGroup>
+        </h:panelGroup>
+        <h:panelGroup rendered="#{AppointmentBean.person.applicantType eq 2}">
+            <h:outputText value="Данные юридического лица"/>
+            <h:panelGrid columns="2" style="width: 100%" border="0">
+                <h:panelGroup>
+                    <h:outputText value="ИНН"/>
+                    <h:outputText value="* " styleClass="required"/>
+                </h:panelGroup>
+                <h:inputText id="inn" value="#{CheckPaymentStatusBean.inn}"/>
+                <h:panelGroup>
+                    <h:outputText value="КПП"/>
+                    <h:outputText value="* " styleClass="required"/>
+                </h:panelGroup>
+                <h:inputText id="kpp" value="#{CheckPaymentStatusBean.kpp}"/>
+            </h:panelGrid>
+        </h:panelGroup>
+        <h:panelGroup>
+            <h:outputText value="Период времени, за который требуются сведения"/>
+            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                <h:outputText value="Начало периода"/>
+                <ppctu:calendar id="beginDate" pattern="dd.MM.yyyy" locale="ru" converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
+                    value="#{CheckPaymentStatusBean.selectedDateFrom}"/>
+                <h:outputText value="Конец периода"/>
+                <ppctu:calendar id="endDate" pattern="dd.MM.yyyy" locale="ru" converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
+                    value="#{CheckPaymentStatusBean.selectedDateTo}"/>
+            </h:panelGrid>
+        </h:panelGroup>
+        <h:panelGroup>
+            <h:commandButton value="Проверить" type="button">
+                <ppctu:ajax listener="#{CheckPaymentStatusBean.checkPayments}" update="@form"/>
+            </h:commandButton>
+            <h:commandButton value="Отменить" onclick="CheckPaymentStatusDialogVar.hide(); return false;" type="button"/>
+        </h:panelGroup>
+        <h:panelGroup id="resultPanel" style="display: BLOCK">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            Дата платежа
+                        </th>
+                        <th>
+                            Уникальный идентификатор платежа
+                        </th>
+                        <th>
+                            Назначение платежа
+                        </th>
+                        <th>
+                            Сумма оплаты по платежу
+                        </th>
+                        <th>
+                            Идентификатор плательщика
+                        </th>
+                        <th>
+                            Расчетный счет получателя средств
+                        </th>
+                        <th>
+                            Идентификатор получателя средств
+                        </th>
+                    </tr>
+                </thead>
+                <tr>
+                    
+                </tr>
+            </table>
+            <h:commandButton value="Сформировать платежные документы" type="button"/>
+            <h:commandButton value="Отмена" type="button" action="CheckPaymentStatusDialogVar.hide(); return false;"/>
+        </h:panelGroup>
+    </ppctu:dialog>
+</h:form>
