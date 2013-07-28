@@ -80,12 +80,13 @@
             </h:panelGrid>
         </h:panelGroup>
         <h:panelGroup>
-            <h:commandButton value="Проверить" type="button">
-                <ppctu:ajax listener="#{CheckPaymentStatusBean.checkPayments}" update="@form"/>
+            <h:commandButton id="btnCheckPaymentStatus" value="Проверить" type="button">
+                <ppctu:ajax listener="#{CheckPaymentStatusBean.checkPayments}"/>
             </h:commandButton>
             <h:commandButton value="Отменить" onclick="CheckPaymentStatusDialogVar.hide(); return false;" type="button"/>
         </h:panelGroup>
         <h:panelGroup id="resultPanel" style="display: BLOCK">
+        <h:inputText id="resultInput" value="#{CheckPaymentStatusBean.testValue}"/>
             <table>
                 <thead>
                     <tr>
@@ -118,7 +119,11 @@
                 </tr>
             </table>
             <h:commandButton value="Сформировать платежные документы" type="button"/>
-            <h:commandButton value="Отмена" type="button" action="CheckPaymentStatusDialogVar.hide(); return false;"/>
+            <h:commandButton value="Отмена" type="button" onclick="CheckPaymentStatusDialogVar.hide(); return false;"/>
         </h:panelGroup>
     </ppctu:dialog>
+    <script language="javascript">
+    	var iid=document.getElementById("btnCheckPaymentStatus").title;
+    	document.getElementById(iid).focus();
+   	</script>
 </h:form>

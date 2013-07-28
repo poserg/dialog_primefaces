@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.github.poserg.primefaces.dialog.beans;
 
 import java.util.ArrayList;
@@ -12,6 +8,8 @@ import java.util.UUID;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import org.primefaces.context.RequestContext;
 
 import ru.it.appquiry.PostBlock;
 import ru.it.appquiry.upi.Citizenship;
@@ -47,6 +45,8 @@ public class CheckPaymentStatusBean {
     private String documentNumber;
     private Date selectedDateFrom;
     private Date selectedDateTo;
+    
+    private String testValue;
 
     public CheckPaymentStatusBean() {
         // :TODO
@@ -157,7 +157,16 @@ public class CheckPaymentStatusBean {
         postBlock.setID(UUID.randomUUID().toString());
         postBlock.setTimeStamp(new Date().toString());
         postBlock.setSenderIdentifier("30633a");
+        
+        test(new AsyncCallback<String>() {
 
+			@Override
+			public void onSuccess(String arg0) {
+				testValue = arg0;
+				RequestContext.getCurrentInstance().update("CheckPaymentStatus:resultInput");
+			}
+		});
+        
         // String payerId = UPICreator.createIdentifier(snils);
         // Payers payers = new Payers();
         // payers.setPayerIdentifier(payerId);
@@ -177,6 +186,10 @@ public class CheckPaymentStatusBean {
         // }
         //
         // });
+    }
+    
+    private void test(AsyncCallback<String> callback) {
+    	callback.onSuccess("Ok2");
     }
 
     /**
@@ -262,4 +275,19 @@ public class CheckPaymentStatusBean {
     public void setCheck(final boolean check) {
         this.check = check;
     }
+
+	/**
+	 * @return the testValue
+	 */
+	public String getTestValue() {
+		System.err.println("testValue = " + testValue);
+		return testValue;
+	}
+
+	/**
+	 * @param testValue the testValue to set
+	 */
+	public void setTestValue(String testValue) {
+		this.testValue = testValue;
+	}
 }

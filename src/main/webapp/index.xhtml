@@ -9,10 +9,11 @@
 </h:head>
 
 <h:body>
-<!-- 	<h:form> -->
-<!-- 	</h:form> -->
-	<p:commandButton value="Show My Dialog" onclick="CheckPaymentStatusDialogVar.show();"
-		type="button" />
+	<h:form>
+		<h:inputText></h:inputText>
+		<p:commandButton value="Show My Dialog"
+			onclick="CheckPaymentStatusDialogVar.show();" type="button" />
+	</h:form>
 	<ui:include src="CheckPaymentStatusDialog.xhtml" />
 </h:body>
 </html>
