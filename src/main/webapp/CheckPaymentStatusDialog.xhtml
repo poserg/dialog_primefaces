@@ -3,9 +3,9 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:ppctu="http://primefaces.org/ui"
+        xmlns:p="http://primefaces.org/ui"
         style="margin:0px; padding:0px;">
-    <ppctu:dialog header="Проверить наличие платежа" id="CheckPaymentStatusDialog"
+    <p:dialog header="Проверить наличие платежа" id="CheckPaymentStatusDialog"
                   widgetVar="CheckPaymentStatusDialogVar" modal="true"
                   resizable="true" width="440"
                   styleClass="checkPaymentDialog">
@@ -35,9 +35,9 @@
                         <h:outputText value="Тип документа"/>
                         <h:outputText value="* " styleClass="required"/>
                     </h:panelGroup>
-                    <ppctu:selectOneMenu id="docType" value="#{CheckPaymentStatusBean.selectedDocType}">
+                    <p:selectOneMenu id="docType" value="#{CheckPaymentStatusBean.selectedDocType}">
                         <f:selectItems value="#{AppointmentBean.documents4applicant}"/>
-                    </ppctu:selectOneMenu>
+                    </p:selectOneMenu>
                     <h:panelGroup>
                         <h:outputText value="Номер документа"/>
                         <h:outputText value="* " styleClass="required"/>
@@ -47,9 +47,9 @@
                         <h:outputText value="Гражданство"/>
                         <h:outputText value="* " styleClass="required"/>
                     </h:panelGroup>
-                    <ppctu:selectOneMenu id="citizenship" value="#{CheckPaymentStatusBean.selectedCitizenship}">
+                    <p:selectOneMenu id="citizenship" value="#{CheckPaymentStatusBean.selectedCitizenship}">
                         <f:selectItems value="#{CheckPaymentStatusBean.citizensipList}"/>
-                    </ppctu:selectOneMenu>
+                    </p:selectOneMenu>
                 </h:panelGrid>
             </h:panelGroup>
         </h:panelGroup>
@@ -72,56 +72,50 @@
             <h:outputText value="Период времени, за который требуются сведения"/>
             <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
                 <h:outputText value="Начало периода"/>
-                <ppctu:calendar id="beginDate" pattern="dd.MM.yyyy" locale="ru" converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
+                <p:calendar id="beginDate" pattern="dd.MM.yyyy" locale="ru" converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
                     value="#{CheckPaymentStatusBean.selectedDateFrom}"/>
                 <h:outputText value="Конец периода"/>
-                <ppctu:calendar id="endDate" pattern="dd.MM.yyyy" locale="ru" converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
+                <p:calendar id="endDate" pattern="dd.MM.yyyy" locale="ru" converterMessage="Некорректное заполнение. Формат поля: «DD.MM.YYYY»"
                     value="#{CheckPaymentStatusBean.selectedDateTo}"/>
             </h:panelGrid>
         </h:panelGroup>
         <h:panelGroup>
             <h:commandButton id="btnCheckPaymentStatus" value="Проверить" type="button">
-                <ppctu:ajax listener="#{CheckPaymentStatusBean.checkPayments}"/>
+                <p:ajax listener="#{CheckPaymentStatusBean.checkPayments}"/>
             </h:commandButton>
             <h:commandButton value="Отменить" onclick="CheckPaymentStatusDialogVar.hide(); return false;" type="button"/>
         </h:panelGroup>
-        <h:panelGroup id="resultPanel" style="display: BLOCK">
-        <h:inputText id="resultInput" value="#{CheckPaymentStatusBean.testValue}"/>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>
-                            Дата платежа
-                        </th>
-                        <th>
-                            Уникальный идентификатор платежа
-                        </th>
-                        <th>
-                            Назначение платежа
-                        </th>
-                        <th>
-                            Сумма оплаты по платежу
-                        </th>
-                        <th>
-                            Идентификатор плательщика
-                        </th>
-                        <th>
-                            Расчетный счет получателя средств
-                        </th>
-                        <th>
-                            Идентификатор получателя средств
-                        </th>
-                    </tr>
-                </thead>
-                <tr>
-                    
-                </tr>
-            </table>
+        <h:panelGroup id="resultPanel" style="display: #{(empty CheckPaymentStatusBean.payments) ? 'NONE' : 'BLOCK'}">
+        <p:dataTable id="resultPaymentTable" var="payment" value="#{CheckPaymentStatusBean.payments}"
+        	selection="#{CheckPaymentStatusBean.selectedPayments}">
+        
+        <p:column selectionMode="multiple" style="width:2%"/>
+		<p:column headerText="Дата платежа">
+			#{payment.date}
+		</p:column>
+		<p:column headerText="Уникальный идентификатор платежа">
+			#{payment.uid}
+		</p:column>
+		<p:column headerText="Назначение платежа">
+			#{payment.destination}
+		</p:column>
+		<p:column headerText="Сумма оплаты по платежу">
+			#{payment.summ}
+		</p:column>
+		<p:column headerText="Идентификатор плательщика">
+			#{payment.upi}
+		</p:column>
+		<p:column headerText="Расчетный счет получателя средств">
+			#{payment.bill}
+		</p:column>
+		<p:column headerText="Идентификатор получателя средств">
+			#{payment.billId}
+		</p:column>
+        </p:dataTable>
             <h:commandButton value="Сформировать платежные документы" type="button"/>
             <h:commandButton value="Отмена" type="button" onclick="CheckPaymentStatusDialogVar.hide(); return false;"/>
         </h:panelGroup>
-    </ppctu:dialog>
+    </p:dialog>
     <script language="javascript">
     	var iid=document.getElementById("btnCheckPaymentStatus").title;
     	document.getElementById(iid).focus();

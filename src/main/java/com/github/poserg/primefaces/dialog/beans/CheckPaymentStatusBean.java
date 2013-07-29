@@ -7,10 +7,13 @@ import java.util.UUID;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.SelectableDataModel;
 
+import ru.it.appquiry.Payments;
 import ru.it.appquiry.PostBlock;
 import ru.it.appquiry.upi.Citizenship;
 import ru.it.appquiry.upi.DocTypes;
@@ -46,26 +49,27 @@ public class CheckPaymentStatusBean {
     private Date selectedDateFrom;
     private Date selectedDateTo;
     
-    private String testValue;
-
+    private PaymentDataModel payments;
+    private Payment[] selectedPayments;
+    
     public CheckPaymentStatusBean() {
         // :TODO
         // appQuiryClientImpl = new AppQuiryClientImpl(userName, pass, wsdl);
         appQuiryClientImpl = new AppQuiryClientImpl();
     }
 
-    public void getPayments() {
-        PostBlock postBlock = new PostBlock();
-        String supplierBillID = null;
-        appQuiryClientImpl.exportAllQuittance(postBlock, supplierBillID, new AsyncCallback<GetInquiryStateResponse>() {
-
-            @Override
-            public void onSuccess(final GetInquiryStateResponse t) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-    }
-
+//    public void getPayments() {
+//        PostBlock postBlock = new PostBlock();
+//        String supplierBillID = null;
+//        appQuiryClientImpl.exportAllQuittance(postBlock, supplierBillID, new AsyncCallback<GetInquiryStateResponse>() {
+//
+//            @Override
+//            public void onSuccess(final GetInquiryStateResponse t) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
+//    }
+//
     public String getSnils() {
         return snils;
     }
@@ -158,15 +162,22 @@ public class CheckPaymentStatusBean {
         postBlock.setTimeStamp(new Date().toString());
         postBlock.setSenderIdentifier("30633a");
         
-        test(new AsyncCallback<String>() {
-
-			@Override
-			public void onSuccess(String arg0) {
-				testValue = arg0;
-				RequestContext.getCurrentInstance().update("CheckPaymentStatus:resultInput");
-			}
-		});
+        List<Payment> paymentList = new ArrayList<CheckPaymentStatusBean.Payment>();
+        Payment p = new Payment();
+        p.setDate("21321");
+        p.setDestination("213");
+        paymentList.add(p);
         
+        p = new Payment();
+        p.setDate("21323233243234");
+        p.setDestination("fdsf");
+        p.setUid("fsdfds");
+        paymentList.add(p);
+        
+        payments = new PaymentDataModel(paymentList);
+        System.err.println("set update");
+        RequestContext.getCurrentInstance().update("CheckPaymentStatus:resultPanel");
+
         // String payerId = UPICreator.createIdentifier(snils);
         // Payers payers = new Payers();
         // payers.setPayerIdentifier(payerId);
@@ -188,8 +199,127 @@ public class CheckPaymentStatusBean {
         // });
     }
     
+    public class Payment {
+    	String date;
+    	String uid;
+    	String destination;
+    	String summ;
+    	String upi;
+    	String bill;
+    	String billId;
+    	
+		/**
+		 * @return the date
+		 */
+		public String getDate() {
+			return date;
+		}
+		/**
+		 * @param date the date to set
+		 */
+		public void setDate(String date) {
+			this.date = date;
+		}
+		/**
+		 * @return the uid
+		 */
+		public String getUid() {
+			return uid;
+		}
+		/**
+		 * @param uid the uid to set
+		 */
+		public void setUid(String uid) {
+			this.uid = uid;
+		}
+		/**
+		 * @return the destination
+		 */
+		public String getDestination() {
+			return destination;
+		}
+		/**
+		 * @param destination the destination to set
+		 */
+		public void setDestination(String destination) {
+			this.destination = destination;
+		}
+		/**
+		 * @return the summ
+		 */
+		public String getSumm() {
+			return summ;
+		}
+		/**
+		 * @param summ the summ to set
+		 */
+		public void setSumm(String summ) {
+			this.summ = summ;
+		}
+		/**
+		 * @return the upi
+		 */
+		public String getUpi() {
+			return upi;
+		}
+		/**
+		 * @param upi the upi to set
+		 */
+		public void setUpi(String upi) {
+			this.upi = upi;
+		}
+		/**
+		 * @return the bill
+		 */
+		public String getBill() {
+			return bill;
+		}
+		/**
+		 * @param bill the bill to set
+		 */
+		public void setBill(String bill) {
+			this.bill = bill;
+		}
+		/**
+		 * @return the billId
+		 */
+		public String getBillId() {
+			return billId;
+		}
+		/**
+		 * @param billId the billId to set
+		 */
+		public void setBillId(String billId) {
+			this.billId = billId;
+		}
+    }
+    
+    class PaymentDataModel extends ListDataModel<Payment> implements SelectableDataModel<Payment> {
+    	
+    	public PaymentDataModel(List<Payment> paymentList) {
+    		super(paymentList);
+		}
+
+		@Override
+		public Payment getRowData(String arg0) {
+			@SuppressWarnings("unchecked")
+			List<Payment> list = (List<Payment>) getWrappedData();
+			for (Payment payment : list) {
+				if (payment.getBillId().equals(arg0))
+					return payment;
+			}
+			return null;
+		}
+
+		@Override
+		public Object getRowKey(Payment arg0) {
+			return arg0.getBillId();
+		}
+    	
+    }
+    
     private void test(AsyncCallback<String> callback) {
-    	callback.onSuccess("Ok2");
+    	callback.onSuccess("null");
     }
 
     /**
@@ -277,17 +407,27 @@ public class CheckPaymentStatusBean {
     }
 
 	/**
-	 * @return the testValue
+	 * @return the selectedPayments
 	 */
-	public String getTestValue() {
-		System.err.println("testValue = " + testValue);
-		return testValue;
+	public Payment[] getSelectedPayments() {
+		return selectedPayments;
 	}
 
 	/**
-	 * @param testValue the testValue to set
+	 * @param selectedPayments the selectedPayments to set
 	 */
-	public void setTestValue(String testValue) {
-		this.testValue = testValue;
+	public void setSelectedPayments(Payment[] selectedPayments) {
+		this.selectedPayments = selectedPayments;
+	}
+
+	/**
+	 * @param payments the payments to set
+	 */
+	public void setPayments(PaymentDataModel payments) {
+		this.payments = payments;
+	}
+	
+	public PaymentDataModel getPayments() {
+		return payments;
 	}
 }
